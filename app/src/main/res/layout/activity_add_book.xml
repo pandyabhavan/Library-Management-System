@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tonikamitv.loginregister.AddBookActivity">
+
+    <TextView
+        android:id="@+id/add_book_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/author"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/author"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="14dp"
+        android:text="Enter book details! "
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <EditText
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/add_book_msg"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Author"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/author"
+        android:layout_alignStart="@+id/author"
+        android:layout_below="@+id/author"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Title"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/call_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/title"
+        android:layout_alignStart="@+id/title"
+        android:layout_below="@+id/title"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Call Number"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/publisher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/call_number"
+        android:layout_alignStart="@+id/call_number"
+        android:layout_below="@+id/call_number"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Publisher"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/pub_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/publisher"
+        android:layout_alignStart="@+id/publisher"
+        android:layout_below="@+id/publisher"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Year of Publication"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/pub_year"
+        android:layout_alignStart="@+id/pub_year"
+        android:layout_below="@+id/pub_year"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Location"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/copies_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/location"
+        android:layout_alignStart="@+id/location"
+        android:layout_below="@+id/location"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Number of Copies"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/current_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/copies_no"
+        android:layout_alignStart="@+id/copies_no"
+        android:layout_below="@+id/copies_no"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Current Status"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/keywords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/current_status"
+        android:layout_alignStart="@+id/current_status"
+        android:layout_below="@+id/current_status"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingTop="15dp"
+        android:text="Keywords"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/bAdd_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/keywords"
+        android:layout_alignStart="@+id/keywords"
+        android:layout_below="@+id/keywords"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:text="Add"
+        android:textColor="@android:color/background_light" />
+</RelativeLayout>

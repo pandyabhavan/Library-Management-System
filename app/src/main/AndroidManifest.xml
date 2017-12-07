@@ -18,7 +18,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".UserAreaActivity"></activity>
+        <activity android:name=".UserAreaActivity" />
+        <activity android:name=".RegisterConfirmActivity" />
+        <activity android:name=".BookDetailActivity" />
+        <activity android:name=".BookOptionsActivity" />
+        <activity android:name=".AddBookActivity"></activity>
     </application>
 
 </manifest>

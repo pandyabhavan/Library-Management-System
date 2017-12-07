@@ -51,9 +51,6 @@ public class LoginActivity extends AppCompatActivity {
                 final String username = etUsername.getText().toString();
                 final String password = etPassword.getText().toString();
                 Log.d(username,password);
-                /*LoginRequest loginRequest = new LoginRequest(json, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(loginRequest);*/
                 sendLoginRequest(username,password);
             }
         });
@@ -62,13 +59,14 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Method to make json object request where json response starts wtih {
      * */
-    private void sendLoginRequest(String username,String password) {
+    private void sendLoginRequest(final String username,String password) {
 
         JSONObject json = new JSONObject();
         try {
             json.put("email", username);
             json.put("password", password);
         }catch (Exception e){}
+        Log.d("",json.toString());
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 "https://library-system-backend.herokuapp.com/users/login", json, new Response.Listener<JSONObject>() {
 
@@ -78,9 +76,20 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
                     Log.d("",response.toString());
+
                     Toast.makeText(getApplicationContext(),
                             response.get("status").toString(),
                             Toast.LENGTH_LONG).show();
+                    if((response.get("status").toString()).equals("200")) {
+                        if((response.getJSONObject("data").getString("type")).equals("patron")){
+                            Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
+                            startActivity(i);
+                        }
+                        else {
+                            Intent i = new Intent(getApplicationContext(), BookOptionsActivity.class);
+                            startActivity(i);
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),
