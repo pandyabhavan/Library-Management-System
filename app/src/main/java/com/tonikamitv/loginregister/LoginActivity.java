@@ -19,12 +19,14 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
     @Override
@@ -77,18 +79,37 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     Log.d("",response.toString());
 
-                    Toast.makeText(getApplicationContext(),
-                            response.get("status").toString(),
-                            Toast.LENGTH_LONG).show();
+
                     if((response.get("status").toString()).equals("200")) {
                         if((response.getJSONObject("data").getString("type")).equals("patron")){
+                            JSONArray arr = response.getJSONObject("data").getJSONArray("books");
+                            ArrayList<Integer> books = new ArrayList<>();
+                            ArrayList<String> dates = new ArrayList<>();
+                            for(int i=0;i<arr.length();i++){
+                                books.add(arr.getJSONObject(i).getInt("book_id"));
+                                dates.add(arr.getJSONObject(i).getString("return_date"));
+                            }
                             Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
+                            i.putExtra("type",response.getJSONObject("data").getString("type"));
+                            i.putExtra("email",response.getJSONObject("data").getString("email"));
+                            i.putExtra("books",books);
+                            i.putExtra("dates",dates);
                             startActivity(i);
                         }
                         else {
                             Intent i = new Intent(getApplicationContext(), BookOptionsActivity.class);
+                            i.putExtra("type",response.getJSONObject("data").getString("type"));
+                            i.putExtra("email",response.getJSONObject("data").getString("email"));
                             startActivity(i);
                         }
+                        Toast.makeText(getApplicationContext(),
+                                "Login Successful.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    else if ((response.get("status").toString()).equals("401")) {
+                        Toast.makeText(getApplicationContext(),
+                                "Internal issue. Try again.",
+                                Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

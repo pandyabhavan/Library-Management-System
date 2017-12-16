@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
 import android.widget.Toast;
@@ -31,25 +32,35 @@ import java.util.ArrayList;
 public class UserAreaActivity extends AppCompatActivity {
     private ListView lvBooks;
     private BookAdapter bookAdapter;
+    private Button bSignOut;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
+        Bundle extras = getIntent().getExtras();
         lvBooks = (ListView) findViewById(R.id.lvBooks);
         ArrayList<Book> aBooks = new ArrayList<Book>();
         bookAdapter = new BookAdapter(this, aBooks);
         lvBooks.setAdapter(bookAdapter);
+        bSignOut = (Button) findViewById(R.id.bSignOut);
 
-        fetchBooks();
-        setupBookSelectedListener();
+        bSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserAreaActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        fetchBooks("https://library-system-backend.herokuapp.com/books/getAll");
+        setupBookSelectedListener(extras.getString("type"),extras.getString("email"),extras.getIntegerArrayList("books"),extras.getStringArrayList("dates"));
     }
 
     // Executes an API call to the OpenLibrary search endpoint, parses the results
     // Converts them into an array of book objects and adds them to the adapter
-    private void fetchBooks() {
-
+    private void fetchBooks(String url) {
+        Log.d("",url);
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                "https://library-system-backend.herokuapp.com/books/getAll", null, new Response.Listener<JSONObject>() {
+                url, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -69,8 +80,8 @@ public class UserAreaActivity extends AppCompatActivity {
                         bookAdapter.add(book); // add book through the adapter
                     }
                     bookAdapter.notifyDataSetChanged();
-            }
-        }}, new Response.ErrorListener() {
+                }
+            }}, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -96,7 +107,7 @@ public class UserAreaActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Fetch the data remotely
-                //fetchBooks(query);
+                fetchBooks("https://library-system-backend.herokuapp.com/books/search/"+query);
                 // Reset SearchView
                 searchView.clearFocus();
                 searchView.setQuery("", false);
@@ -115,13 +126,17 @@ public class UserAreaActivity extends AppCompatActivity {
         return true;
     }
 
-    public void setupBookSelectedListener() {
+    public void setupBookSelectedListener(final String type, final String email, final ArrayList<Integer> books, final ArrayList<String> dates) {
         lvBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Launch the detail view passing book as an extra
                 Intent intent = new Intent(UserAreaActivity.this, BookDetailActivity.class);
                 intent.putExtra("book",bookAdapter.getItem(position));
+                intent.putExtra("type",type);
+                intent.putExtra("email", email);
+                intent.putExtra("books",books);
+                intent.putExtra("dates",dates);
                 startActivity(intent);
             }
         });

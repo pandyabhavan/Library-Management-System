@@ -2,6 +2,7 @@ package com.tonikamitv.loginregister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,8 @@ public class BookOptionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_options);
+
+        final Bundle extras = getIntent().getExtras();
 
         final Button bAdd = (Button) findViewById(R.id.bAdd);
         final Button bSearch = (Button) findViewById(R.id.bSearch);
@@ -31,6 +34,10 @@ public class BookOptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
+                if(extras != null) {
+                    i.putExtra("type", extras.getString("type"));
+                    i.putExtra("email", extras.getString("email"));
+                }
                 startActivity(i);
             }
         });

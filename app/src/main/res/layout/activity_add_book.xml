@@ -85,7 +85,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:paddingTop="15dp"
-        android:text="Year of Publication"
+        android:text="2011"
         android:textSize="12sp" />
 
     <EditText
@@ -111,7 +111,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:paddingTop="15dp"
-        android:text="Number of Copies"
+        android:text="100"
         android:textSize="12sp" />
 
     <EditText

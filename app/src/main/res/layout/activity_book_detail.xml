@@ -61,12 +61,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:inputType="number"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/tvPublicationYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:inputType="number"
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/tvCallNumber"
@@ -92,6 +94,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvReturnDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp" />
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="280dp"
+                android:layout_height="1px"
+                android:layout_marginTop="8dp" />
+
+            <Button
+                android:id="@+id/bEditBookDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:text="Edit Book"/>
+
+            <Button
+                android:id="@+id/bDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:background="@color/colorAccent"
+                android:text="Delete Book"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

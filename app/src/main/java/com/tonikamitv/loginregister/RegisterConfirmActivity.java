@@ -42,8 +42,7 @@ public class RegisterConfirmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d("","extras.getString(\"verification_code\") "+extras.getString("verification_code"));
                 final String code = verification_code.getText().toString();
-                Toast toast = Toast.makeText(getApplicationContext(),code, Toast.LENGTH_LONG);
-                toast.show();
+                Toast toast = null;
                 if(code.equals(extras.getString("verification_code"))){
                     JSONObject json = new JSONObject();
                     try {
@@ -54,6 +53,8 @@ public class RegisterConfirmActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d("",response.toString());
+                            Toast toast1 = Toast.makeText(getApplicationContext(),"Account Vefified", Toast.LENGTH_LONG);
+                            toast1.show();
                         }
                     }, new Response.ErrorListener() {
 

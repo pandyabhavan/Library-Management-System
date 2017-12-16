@@ -17,6 +17,11 @@ import java.util.Set;
 public class Book implements Serializable {
     private String openLibraryId;
     private String author;
+    private String title;
+    private int publicationYear,copies;
+
+    private  String call_number,publisher,location,status,keywords;
+
 
     public int getPublicationYear() {
         return publicationYear;
@@ -74,10 +79,6 @@ public class Book implements Serializable {
         this.keywords = keywords;
     }
 
-    private String title;
-    private int publicationYear,copies;
-    private  String call_number,publisher,location,status,keywords;
-
     public String getOpenLibraryId() {
         return openLibraryId;
     }
@@ -116,7 +117,6 @@ public class Book implements Serializable {
             book.keywords = jsonObject.getString("keywords");
             book.publicationYear = jsonObject.getInt("publication_year");
             book.copies = jsonObject.getInt("copies");
-
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

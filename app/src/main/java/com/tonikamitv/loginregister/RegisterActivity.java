@@ -70,14 +70,20 @@ public class RegisterActivity extends AppCompatActivity {
                 try {
                     Log.d("",response.toString());
                     Log.d("",response.getJSONObject("data").getString("verification_code"));
-                    Toast.makeText(getApplicationContext(),
-                            response.get("status").toString(),
-                            Toast.LENGTH_LONG).show();
                     if((response.get("status").toString()).equals("200")) {
                         Intent i = new Intent(getApplicationContext(), RegisterConfirmActivity.class);
                         i.putExtra("username",username);
                         i.putExtra("verification_code", response.getJSONObject("data").getString("verification_code"));
                         startActivity(i);
+                        Toast.makeText(getApplicationContext(),
+                                "Please verify account.",
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                    else if ((response.get("status").toString()).equals("401")) {
+                        Toast.makeText(getApplicationContext(),
+                                "Internal issue. Try again.",
+                                Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
