@@ -1,4 +1,4 @@
-package com.tonikamitv.loginregister;
+package com.group11.library.Activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.group11.androidTest.loginregister.R;
 
 import org.json.JSONObject;
 

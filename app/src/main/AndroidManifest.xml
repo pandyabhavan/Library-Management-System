@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tonikamitv.loginregister">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.group11.androidTest.loginregister">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <permission android:name="android.permission.SET_TIME"
+    android:protectionLevel="signature|system" />
 
     <application
         android:allowBackup="true"
@@ -10,19 +14,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name="com.group11.library.Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".UserAreaActivity" />
-        <activity android:name=".RegisterConfirmActivity" />
-        <activity android:name=".BookDetailActivity" />
-        <activity android:name=".BookOptionsActivity" />
-        <activity android:name=".AddBookActivity"></activity>
+        <activity android:name="com.group11.library.Activity.RegisterActivity" />
+        <activity android:name="com.group11.library.Activity.UserAreaActivity" />
+        <activity android:name="com.group11.library.Activity.RegisterConfirmActivity" />
+        <activity android:name="com.group11.library.Activity.BookDetailActivity" />
+        <activity android:name="com.group11.library.Activity.BookOptionsActivity" />
+        <activity android:name="com.group11.library.Activity.AddBookActivity"></activity>
     </application>
 
 </manifest>

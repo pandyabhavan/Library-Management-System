@@ -1,8 +1,8 @@
-package com.tonikamitv.loginregister;
+package com.group11.library.Activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
-import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +21,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.group11.library.Models.Book;
 import com.squareup.picasso.Picasso;
+import com.group11.androidTest.loginregister.R;
 
 import org.json.JSONObject;
 
@@ -88,16 +90,28 @@ public class BookDetailActivity extends AppCompatActivity {
         tvStatus.setText("Status: "+book.getStatus());
         tvKeywords.setText("Keywords: "+book.getKeywords());
         tvReturnDate.setVisibility(View.GONE);
+        String return_date = "";
         if(dates != null && books != null){
             int index = books.indexOf(Integer.parseInt(book.getOpenLibraryId()));
+            Log.d("","index "+index);
             if(index != -1){
                 tvReturnDate.setVisibility(View.VISIBLE);
                 tvReturnDate.setText("Return Date: "+dates.get(index));
+                return_date = dates.get(index);
             }
         }
-        if(type.equals("patron")){
+       if(type.equals("patron")){
             if(books != null) {
-                if (books.contains(Integer.parseInt(book.getOpenLibraryId())))
+                if(book.getCopies() == 0 && !books.contains(Integer.parseInt(book.getOpenLibraryId()))){
+                    bEdit.setText("Join Wait List");
+                }
+                else if(return_date != "" && (new Date(return_date).compareTo(new Date()) < 0)){
+                    long secs = (new Date().getTime() - new Date(return_date).getTime()) / 1000;
+                    int hours = (int) (secs / 3600);
+                    int fine = (hours/24)+1;
+                    bEdit.setText("Pay fine of $"+fine+" & Return");
+                }
+                else if (books.contains(Integer.parseInt(book.getOpenLibraryId())))
                     bEdit.setText("Return Book");
                 else
                     bEdit.setText("Checkout Book");
@@ -105,66 +119,146 @@ public class BookDetailActivity extends AppCompatActivity {
             else
                 bEdit.setText("Checkout Book");
 
-            bDelete.setVisibility(View.GONE);
+           bDelete.setVisibility(View.GONE);
+           if(return_date != "" && (new Date(return_date).compareTo(new Date()) > 0)) {
+               long secs = (new Date(return_date).getTime() - new Date().getTime()) / 1000;
+               int hours = (int) (secs / 3600);
+               if(hours < 120) {
+                   bDelete.setText("Renew Book");
+                   bDelete.setBackgroundColor(Color.GRAY);
+                   bDelete.setVisibility(View.VISIBLE);
+               }
+           }
         }
+
         bDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                        "https://library-system-backend.herokuapp.com/books/delete/"+book.getOpenLibraryId(), null, new Response.Listener<JSONObject>() {
+                if(!type.equals("patron")) {
+                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                            "https://library-system-backend.herokuapp.com/books/delete/" + book.getOpenLibraryId(), null, new Response.Listener<JSONObject>() {
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d("",response.toString());
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Log.d("", response.toString());
 
-                            if((response.get("status").toString()).equals("200")) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Book Deleted Successfully",
-                                        Toast.LENGTH_LONG).show();
-                                int index = 0;
-                                if((index = books.indexOf(Integer.parseInt(book.getOpenLibraryId()))) != -1) {
-                                    books.remove(Integer.parseInt(book.getOpenLibraryId()));
-                                    dates.remove(index);
+                                if ((response.get("status").toString()).equals("200")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Book Deleted Successfully",
+                                            Toast.LENGTH_LONG).show();
+                                    int index = 0;
+                                    if ((index = books.indexOf(Integer.parseInt(book.getOpenLibraryId()))) != -1) {
+                                        books.remove(Integer.parseInt(book.getOpenLibraryId()));
+                                        dates.remove(index);
+                                    }
+                                    Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
+                                    i.putExtra("email", email);
+                                    i.putExtra("type", type);
+                                    i.putExtra("dates", dates);
+                                    i.putExtra("books", books);
+                                    startActivity(i);
+                                } else if ((response.get("status").toString()).equals("401")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Internal issue. Try again.",
+                                            Toast.LENGTH_LONG).show();
+                                } else if ((response.get("status").toString()).equals("403")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Book can't be deleted because it's checked out.",
+                                            Toast.LENGTH_LONG).show();
                                 }
-                                Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
-                                i.putExtra("email",email);
-                                i.putExtra("type",type);
-                                i.putExtra("dates",dates);
-                                i.putExtra("books",books);
-                                startActivity(i);
-                            }
-                            else if ((response.get("status").toString()).equals("401")) {
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 Toast.makeText(getApplicationContext(),
-                                        "Internal issue. Try again.",
+                                        "Error",
                                         Toast.LENGTH_LONG).show();
                             }
-                            else if ((response.get("status").toString()).equals("403")) {
-                                Toast.makeText(getApplicationContext(),
-                                        "Book can't be deleted because it's checked out.",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),
-                                    "Error",
-                                    Toast.LENGTH_LONG).show();
                         }
-                    }
-                }, new Response.ErrorListener() {
+                    }, new Response.ErrorListener() {
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        VolleyLog.d("Error", "Error: " + error);
-                        Toast.makeText(getApplicationContext(),
-                                "Error", Toast.LENGTH_SHORT).show();
-                        // hide the progress dialog
-                    }
-                });
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            VolleyLog.d("Error", "Error: " + error);
+                            Toast.makeText(getApplicationContext(),
+                                    "Error", Toast.LENGTH_SHORT).show();
+                            // hide the progress dialog
+                        }
+                    });
 
-                // Adding request to request queue
-                RequestQueue queue = Volley.newRequestQueue(BookDetailActivity.this);
-                queue.add(jsonObjReq);
+                    // Adding request to request queue
+                    RequestQueue queue = Volley.newRequestQueue(BookDetailActivity.this);
+                    queue.add(jsonObjReq);
+                }
+                else{
+                    JSONObject json = new JSONObject();
+                    try{
+                        json.put("id",book.getOpenLibraryId());
+                        json.put("email",email);
+                    }catch (Exception e){e.printStackTrace();}
+                    Log.d("",json.toString());
+                    JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                            "https://library-system-backend.herokuapp.com/books/renew/", json, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Log.d("", response.toString());
+
+                                if ((response.get("status").toString()).equals("200")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "You successfully renewed the book",
+                                            Toast.LENGTH_LONG).show();
+                                    long time = new Date(tvReturnDate.getText().toString()).getTime()+(30*24*3600*1000);
+                                    tvReturnDate.setText(new Date(time).toString());
+                                    Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
+                                    int index = 0;
+                                    if((index = books.indexOf(Integer.parseInt(book.getOpenLibraryId()))) != -1) {
+                                        books.remove(Integer.parseInt(book.getOpenLibraryId()));
+                                        dates.remove(index);
+                                    }
+                                    i.putExtra("type", type);
+                                    i.putExtra("email",email);
+                                    i.putExtra("books",books);
+                                    i.putExtra("dates",dates);
+                                    startActivity(i);
+                                }
+                                else if ((response.get("status").toString()).equals("405")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Can't renew someone is in waiting list",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                else if ((response.get("status").toString()).equals("403")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "You can renew only 2 times",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                else if ((response.get("status").toString()).equals("401")) {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Internal Error. Try again",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            } catch (Exception e) {
+                                //e.printStackTrace();
+                                Toast.makeText(getApplicationContext(),
+                                        "Error",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //VolleyLog.d("Error", "Error: " + error);
+                            Toast.makeText(getApplicationContext(),
+                                    "Error", Toast.LENGTH_SHORT).show();
+                            // hide the progress dialog*/
+                        }
+                    });
+
+                    // Adding request to request queue
+                    RequestQueue queue = Volley.newRequestQueue(BookDetailActivity.this);
+                    queue.add(jsonObjReq);
+                }
             }
         });
 
@@ -182,7 +276,65 @@ public class BookDetailActivity extends AppCompatActivity {
                 else{
                     if(books == null)
                         return;
-                    if(books.contains(Integer.parseInt(book.getOpenLibraryId()))){;
+                    if(book.getCopies() == 0 && !books.contains(Integer.parseInt(book.getOpenLibraryId()))){
+                        JSONObject json = new JSONObject();
+                        try{
+                            json.put("id",book.getOpenLibraryId());
+                            json.put("email",email);
+                        }catch (Exception e){e.printStackTrace();}
+                        Log.d("",json.toString());
+                        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                                "https://library-system-backend.herokuapp.com/books/joinWaitList/", json, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    Log.d("", response.toString());
+
+                                    if ((response.get("status").toString()).equals("200")) {
+                                        Toast.makeText(getApplicationContext(),
+                                                "You successfully joined WaitList",
+                                                Toast.LENGTH_LONG).show();
+                                        Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
+                                        int index = 0;
+                                        if((index = books.indexOf(Integer.parseInt(book.getOpenLibraryId()))) != -1) {
+                                            books.remove(Integer.parseInt(book.getOpenLibraryId()));
+                                            dates.remove(index);
+                                        }
+                                        i.putExtra("type", type);
+                                        i.putExtra("email",email);
+                                        i.putExtra("books",books);
+                                        i.putExtra("dates",dates);
+                                        startActivity(i);
+                                    }
+                                    else if ((response.get("status").toString()).equals("401")) {
+                                        Toast.makeText(getApplicationContext(),
+                                                "You already joined the wait list.",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                } catch (Exception e) {
+                                    //e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(),
+                                            "Error",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                //VolleyLog.d("Error", "Error: " + error);
+                                Toast.makeText(getApplicationContext(),
+                                        "Error", Toast.LENGTH_SHORT).show();
+                                // hide the progress dialog*/
+                            }
+                        });
+
+                        // Adding request to request queue
+                        RequestQueue queue = Volley.newRequestQueue(BookDetailActivity.this);
+                        queue.add(jsonObjReq);
+                    }
+                    else if(books.contains(Integer.parseInt(book.getOpenLibraryId()))){;
                         JSONObject json = new JSONObject();
                         try{
                             json.put("id",book.getOpenLibraryId());
@@ -196,11 +348,17 @@ public class BookDetailActivity extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 try {
                                     Log.d("", response.toString());
+                                    String s = "Book Returned Successfully";
+                                    if(bEdit.getText().toString().contains("fine"))
+                                    {
+                                        s = "Fine paid and returned Successfully.";
+                                    }
 
                                     if ((response.get("status").toString()).equals("200")) {
                                         Toast.makeText(getApplicationContext(),
-                                                "Book Returned Successfully",
+                                                s,
                                                 Toast.LENGTH_LONG).show();
+                                        bEdit.setText("Checkout Book");
                                         Intent i = new Intent(getApplicationContext(), UserAreaActivity.class);
                                         int index = 0;
                                         if((index = books.indexOf(Integer.parseInt(book.getOpenLibraryId()))) != -1) {

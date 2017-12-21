@@ -1,7 +1,6 @@
-package com.tonikamitv.loginregister;
+package com.group11.library.Activity;
 
 import android.content.Intent;
-import android.preference.PreferenceActivity;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.ListView;
 import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
-import com.android.volley.ExecutorDelivery;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,6 +21,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.group11.androidTest.loginregister.R;
+import com.group11.library.Adapter.BookAdapter;
+import com.group11.library.Models.Book;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ public class UserAreaActivity extends AppCompatActivity {
     private ListView lvBooks;
     private BookAdapter bookAdapter;
     private Button bSignOut;
+    public ArrayList<Book> allBooks;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,11 +74,11 @@ public class UserAreaActivity extends AppCompatActivity {
                         docs = response.getJSONArray("data");
                     }catch (Exception e){}
                     // Parse json array into array of model objects
-                    final ArrayList<Book> books = Book.fromJson(docs);
+                    allBooks = Book.fromJson(docs);
                     // Remove all books from the adapter
                     bookAdapter.clear();
                     // Load model objects into the adapter
-                    for (Book book : books) {
+                    for (Book book : allBooks) {
                         bookAdapter.add(book); // add book through the adapter
                     }
                     bookAdapter.notifyDataSetChanged();
@@ -137,6 +139,7 @@ public class UserAreaActivity extends AppCompatActivity {
                 intent.putExtra("email", email);
                 intent.putExtra("books",books);
                 intent.putExtra("dates",dates);
+                intent.putExtra("allBooks",allBooks);
                 startActivity(intent);
             }
         });

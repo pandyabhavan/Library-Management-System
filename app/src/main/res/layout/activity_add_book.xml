@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tonikamitv.loginregister.AddBookActivity">
+    tools:context="com.group11.androidTest.loginregister.com.group11.tonikamitv.library.AddBookActivity">
 
     <TextView
         android:id="@+id/add_book_msg"

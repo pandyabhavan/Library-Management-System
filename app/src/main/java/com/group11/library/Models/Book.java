@@ -1,6 +1,4 @@
-package com.tonikamitv.loginregister;
-
-import android.text.TextUtils;
+package com.group11.library.Models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +6,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Created by akeerty on 12/6/2017.

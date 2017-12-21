@@ -1,4 +1,4 @@
-package com.tonikamitv.loginregister;
+package com.group11.library.Adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,7 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.group11.library.Models.Book;
 import com.squareup.picasso.Picasso;
+import com.group11.androidTest.loginregister.R;
 
 import java.util.ArrayList;
 

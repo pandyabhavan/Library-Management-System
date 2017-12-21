@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UserAreaActivity">
+    tools:context="com.group11.library.Activity.UserAreaActivity">
 
     <ScrollView
         android:layout_width="match_parent"
